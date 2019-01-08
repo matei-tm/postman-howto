@@ -1,5 +1,6 @@
 # postman-howto
-Postman notes
+
+This repo contains scripts and hints to solve weby tasks using Postman (API testing software)
 
 ## Get custom content from a REST service
 
@@ -124,26 +125,44 @@ We will access and iterate the REST service element by element and extract custo
 
 #### Add new environment 
 
+We will create a new environment named <b>Gis_Env</b> with three variables
+
 ![new environment](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/00_new_environment.png)
 
 #### Create the variables
+
+The variables are: 
+
+1. responseData to store the response. Initial value is an empty collection
+2. counterId. A counter with initial value of 1
+3. counterMaxval. A threshold to store the max iteration count. For our example we will iterate maximum 4 elements.
 
 ![create variables](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/01_new_environment.png)
 
 #### Add new collection
 
+In order to create the request we need a new collection
+
 ![new collection](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/00_new_collection.png)
 
 #### Create the collection
 
+Save the collection with the name <b>SeismicInfo</b>
+
 ![save the collection](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/01_new_collection.png)
 
-#### Add request
+#### Add a new request to the collection
+
+Add the templated request named <b>GetCustomSeismicInfo</b>
 
 ![add request](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/02_add_request.png)
 ![save request](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/03_save_request.png)
 
+Enter a variable url <b>{{url}}</b>
+
 ![enter url variable](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/04_request_url.png)
+
+In the <b>Pre-requestScript</b> section add the followings
 
 ```javascript
 var loop_id = Number(postman.getEnvironmentVariable("counterId"));
@@ -159,6 +178,8 @@ postman.setEnvironmentVariable("counterId" , loop_id + 1);
 ```
 
 ![add the script](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/05_prerequestscript.png)
+
+In the <b>Tests</b> section add the followings 
 
 ```javascript
 var jsonData = JSON.parse(responseBody);
@@ -194,8 +215,18 @@ if (current_id > Number(postman.getEnvironmentVariable("counterMaxval")))
 ![tests content](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/06_tests.png)
 
 #### Run with collection runner
+
+Access the collection runner
+
 ![select environment](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/07_select_environment.png)
+
 ![run](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/08_run.png)
+
+Show Postman Console 
+
 ![show console](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/09_show_console.png)
+
+Select Gis_Env, fill 4 on the number of iterations the same value as "counterMaxval" value.
+Hit Run SeismicInfo and you will have the result served in the PostmanConsole
 
 ![execute](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/10_execute.png)
