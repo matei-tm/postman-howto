@@ -3,25 +3,142 @@ Postman notes
 
 ## Get custom content from a REST service
 
-Quick tutorial to access and iterate a REST service that return JSON response and extract custom content as new JSON.
+### The problem
+We have to solve the following problem:
 
-### Add new environment 
+A REST service with a base URI http://seismic-alert.ro/posts/ returns "posts" JSON elements. The first n elements must be transformed to a lighter custom JSON format. The collection with the custom JSON format must be returned.
+
+#### Original format
+
+The original elements are in the following format:
+
+```JSON
+{
+"id":1,
+"name":null,
+"address":"Strada ACADEMIEI",
+"lat":"44.436402",
+"lng":"26.099322",
+"author_id":1,
+"approver_id":null,
+"approved":null,
+"approved_at":null,
+"text":null,
+"created_at":"2016-05-22T21:01:33.000Z",
+"updated_at":"2016-09-01T19:02:03.000Z",
+"sector":1,
+"city":"București",
+"upload_id":1,
+"active_submission_id":2602,
+"uploaded_submission_id":1,
+"street_number":"15",
+"submission_count":2,
+"active_submission":
+	{
+		"id":2602,
+		"appartments_no":6,
+		"occupied_appartments_no":3,
+		"residents_no":7,
+		"post_id":1,
+		"created_at":"2016-09-01T19:00:41.000Z",
+		"updated_at":"2016-09-01T19:00:41.000Z",
+		"has_owners_association":false,
+		"debtors_no":null,
+		"utilities_disconnections_comments":"",
+		"has_tehnical_issues_comments":"",
+		"owners_no":6,
+		"public_owners_no":null,
+		"public_owners_comments":"",
+		"rented_appartments_no":null,
+		"offices_no":null,
+		"commercial_spaces_no":null,
+		"neighbouring_residential":null,
+		"neighbouring_commercial_or_cultural":null,
+		"neighbouring_public_buildings":null,
+		"neighbouring_public_space":null,
+		"neighbouring_yard":null,
+		"neighbouring_comments":"In cladire se afla teatrul Odeon",
+		"source_name":"",
+		"source_phone_number":"",
+		"source_email":"",
+		"seismic_class_id":1,
+		"import_originated":null,
+		"accepted":null,
+		"height_standard":null,
+		"construction_year":null,
+		"surface":null,
+		"technical_evaluation_year":null,
+		"technical_evaluator_name":null,
+		"building_still_exists":true,
+		"owned_by_companies_no":null,
+		"personal_opinion":"",
+		"rehabilitation_variant_id":3,
+		"submitter_name":"Anghene Laura si Bogdan Suditu",
+		"submitter_phone_number":"0769289483",
+		"submitter_email":"laurageorgiana.anghene@gmail.com",
+		"images":[],
+		"created_by_user_id":3,
+		"seismic_class":
+			{
+				"id":1,
+				"acronym":"rs i - pericol public",
+				"name":"Rs I PP",
+				"description":"Lista imobilelor expertizate tehnic din punct de vedere al riscului seismic încadrate în clasa I de risc seismic care prezinta pericol public  ( clasa RsI. din care fac parte construcțiile cu risc ridicat de prăbușire la cutremurul de proiectare corespunzător stării limita ) (conform Codului de evaluare antiseismica P100-3/2008)",
+				"created_at":"2016-05-22T20:30:48.000Z",
+				"updated_at":"2016-06-12T11:51:28.000Z",
+				"long_name":"Clasa I - Pericol Public de risc seismic",
+				"cnt":0,
+				"image_marker":"markers/darkest_red.png"
+			}
+	}
+}					
+```
+
+#### Output format
+
+```JSON
+{
+    "id":1,
+    "address":"Strada ACADEMIEI",
+    "lat":"44.436402",
+    "lng":"26.099322",
+    "street_number":"15",
+    "appartments_no":6,
+    "occupied_appartments_no":3,
+    "seismic_class_id":1,
+    "source_name":"",
+    "source_phone_number":""}
+```
+
+### Solutions
+
+### Solution 1. GET the entire collection in a single step
+
+Get the entire collection of the elements from http://seismic-alert.ro/posts/ and transform it to the new collection of custom objects
+
+### Solution 2. GET entity by entity and transform
+
+An exotic solution that could be applied to any service that do not expose an endpoint to reach entire collection and must be visited entity by entity.
+
+We will access and iterate the REST service element by element and extract custom content as new JSON.
+
+#### Add new environment 
 
 ![new environment](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/00_new_environment.png)
 
-### Create the variables
+#### Create the variables
 
 ![create variables](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/01_new_environment.png)
 
-### Add new collection
+#### Add new collection
 
 ![new collection](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/00_new_collection.png)
 
-### Create the collection
+#### Create the collection
 
 ![save the collection](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/01_new_collection.png)
 
-### Add request
+#### Add request
 
 ![add request](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/02_add_request.png)
 ![save request](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/03_save_request.png)
@@ -76,7 +193,7 @@ if (current_id > Number(postman.getEnvironmentVariable("counterMaxval")))
 
 ![tests content](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/06_tests.png)
 
-### Run with collection runner
+#### Run with collection runner
 ![select environment](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/07_select_environment.png)
 ![run](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/08_run.png)
 ![show console](https://github.com/matei-tm/postman-howto/raw/master/rest_iteration/images/09_show_console.png)
